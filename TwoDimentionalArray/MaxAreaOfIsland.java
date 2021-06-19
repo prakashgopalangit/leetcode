@@ -25,14 +25,14 @@ class MaxAreaOfIslandSolution {
         for(int row=0;row<rowLength;row++){
             for(int col=0;col<colLength;col++){
                 if(grid[row][col]==1){
-                    bfs(grid, row, col, visited);
+                    dfs(grid, row, col, visited);
                 }
             }
         }
         return maxArealand;
     }
 
-    public int bfs(int[][] grid, int row, int col, boolean[][] visited){
+    public int dfs(int[][] grid, int row, int col, boolean[][] visited){
         System.out.println("row -->  "+ row);
         System.out.println("col -->  "+ col);
         if(row<0 || row>=grid.length || col<0 || col >=grid[0].length)
@@ -40,10 +40,10 @@ class MaxAreaOfIslandSolution {
         if(grid[row][col]==0 || visited[row][col])
             return 0;
         visited[row][col] = true;
-        int localAreaLand = 1 + bfs(grid, row+1, col, visited)
-                            + bfs(grid, row-1, col, visited)
-                            + bfs(grid, row, col+1, visited)
-                            + bfs(grid, row, col-1, visited);
+        int localAreaLand = 1 + dfs(grid, row+1, col, visited)
+                            + dfs(grid, row-1, col, visited)
+                            + dfs(grid, row, col+1, visited)
+                            + dfs(grid, row, col-1, visited);
         this.maxArealand = Math.max(maxArealand, localAreaLand);
         return localAreaLand;
     }

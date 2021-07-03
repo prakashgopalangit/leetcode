@@ -3,8 +3,12 @@ package com.prakash.leetcode.NewStart.String;
 public class WildcardMatching {
     public static void main(String[] args) {
 
-        String s = "m i s si ss i p pi";
-        String p = "m ? ? *  ss*?i*pi";
+        //String s = "m i s si ss i p pi";
+        //String p = "m ? ? *  ss*?i*pi";
+        String s = "adceb";
+        String p = "a*b";
+
+
         System.out.println(" boolean ---> "+ new WildcardMatchingSolution().isMatch(s,p));
 
     }
@@ -12,45 +16,33 @@ public class WildcardMatching {
 
 class WildcardMatchingSolution {
     public boolean isMatch(String s, String p) {
-        if(p.equalsIgnoreCase("*"))
+        if(p.length()==0 || p.equalsIgnoreCase("*"))
             return true;
         if(p.length()==1 && s.length()>1)
             return false;
-        int sPointer = 0;
-        int pPointer = 0;
-        char prevSpecialChar = '+';
+        return backtracking(s, p, 0, 0, '+');
 
-        while(sPointer<s.length() && pPointer<p.length()){
-            System.out.println(" sPointer " + sPointer);
-            System.out.println(" pPointer " + pPointer);
-            if(Character.isLetter(p.charAt(pPointer))){
-                if(prevSpecialChar =='+' || prevSpecialChar =='?')
-                    if(s.charAt(sPointer)!=p.charAt(pPointer))
-                        return false;
-                pPointer++;
-                sPointer++;
-            }else if(p.charAt(pPointer)=='?'){
-                prevSpecialChar = '?';
-                sPointer++;
-                pPointer++;
-            }else{
-                System.out.println(" go to * condition");
-                prevSpecialChar = '*';
-                if(pPointer>=p.length())
-                    continue;
-                char nextPChar = p.charAt(++pPointer);
-                System.out.println("nextPChar --> "+ nextPChar);
-                System.out.println("s.charAt(sPointer) --> "+ s.charAt(sPointer));
-                while(s.charAt(sPointer)!=nextPChar){
-                   sPointer++;
-                    System.out.println("nextPChar --> "+ nextPChar);
-                    System.out.println("s.charAt(sPointer) --> "+ s.charAt(sPointer));
-                }
-                sPointer++;
-                pPointer++;
-            }
-
-        }
-        return sPointer==s.length() && pPointer==p.length();
     }
+
+    public boolean backtracking(String s, String p, int sIndex, int pIndex, char prevChar ){
+
+        if(sIndex>=s.length() || (pIndex==p.length()-1 && p.charAt(pIndex)=='*'))
+            return true;
+
+        if(s.charAt(sIndex)!=p.charAt(pIndex)){
+            if(p.charAt(pIndex)=='*'){
+                return backtracking(s, p, sIndex+1, pIndex+1, '*');
+            }else if(p.charAt(pIndex)=='?'){
+                return backtracking(s, p, sIndex+1, pIndex+1, '?');
+            }else if(prevChar=='*'){
+                return backtracking(s, p, sIndex+1, pIndex, '*');
+            }else{
+                return false;
+            }
+        }else{
+            return backtracking(s, p, sIndex+1, pIndex+1, prevChar);
+        }
+
+    }
+
 }
